@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Model\Task;
 use App\Models\Company;
 use App\Helpers\FormHelpers;
+use App\Models\Project;
 use Illuminate\Support\Facades\Validator;
 
 class CreateTask {
@@ -13,6 +14,7 @@ class CreateTask {
 	private $task;
 	private $company;
 	private $price;
+	private $project;
 
 	public function __construct(array $request) {
 		$this->request = $request;
@@ -27,6 +29,8 @@ class CreateTask {
 		$this->validateCredits();
 
 		$this->deductCredits();
+
+		$this->createProject();
 
 		$this->createTask();
 
@@ -65,7 +69,13 @@ class CreateTask {
 		}
 	}
 
+	private function createProject() {
+		$this->project = Project::create(['status' => Project::REQUESTED]);
+	}
+
 	private function createTask() {
+		$this->request['deadline'] = (new Carbon($this->request['deadline']))->endOfHour()->toDateTimeString();
+		$this->request['projectId'] = $this->project->id;
 		$this->task = Task::create($this->request);
 	}
 }

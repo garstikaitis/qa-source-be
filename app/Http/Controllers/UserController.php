@@ -9,8 +9,15 @@ class UserController extends Controller
 {
     public function getUsers() {
         try {
-			if(!Auth::user()->is_admin) abort(403, 'Access denied');
-            return response(['success' => true, 'message' => 'Successfuly got users', 'data' => User::where('is_admin', 0)->get()], 200);
+            $data = null;
+            if(Auth::user()->isTester()) abort(403, 'Access denied');
+            if(Auth::user()->isClient()) {
+                $company = Auth::user()->companies()->first()->load('users');
+                $data = $company->users;
+            } else {
+                $data = User::with('companies')->where('is_admin', 0)->get();
+            }
+            return response(['success' => true, 'message' => 'Successfuly got users', 'data' => $data], 200);
         } catch (\Throwable $e) {
             return response(['success' => false, 'message' => $e->getMessage()], 500);
         }

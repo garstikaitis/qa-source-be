@@ -34,8 +34,9 @@ class ApplyToProject {
 	}
 
 	protected function validateUser() {
-		if(Auth::user()->is_admin) abort(403, 'Admins cannot apply to projects');
-		if(Auth::user()->companies()->count()) abort(403, 'Clients cannot apply to projects');
+		$this->user = User::findOrFail($this->request['userId']);
+		if($this->user->is_admin) abort(403, 'Admins cannot apply to projects');
+		if($this->user->companies()->count()) abort(403, 'Clients cannot apply to projects');
 	}
 
 	private function validate() {

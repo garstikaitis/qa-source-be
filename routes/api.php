@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::post('/logout', 'Auth\LoginController@logout');
     Route::group(['prefix' => 'tasks'], function () {
         Route::get('/', 'TaskController@getTasks')->name('getTasks');
         Route::post('/create', 'TaskController@createTask')->name('createTask');
@@ -30,6 +29,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         Route::post('/add-user', 'CompanyController@addUserToCompany')->name('addUserToCompany');
     });
     Route::group(['prefix' => 'projects'], function() {
+        Route::get('/', 'ProjectController@getProjects')->name('getProjects');
         Route::post('/take', 'ProjectController@applyToProject')->name('applyToProject');
         Route::post('/return', 'ProjectController@returnProject')->name('returnProject');
     });
@@ -38,3 +38,5 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 Route::post('/register', 'Auth\RegisterController@register');
 Route::post('/login', 'Auth\LoginController@login');
+Route::post('/logout', 'Auth\LoginController@logout');
+

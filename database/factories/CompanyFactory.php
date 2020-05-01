@@ -15,6 +15,6 @@ $factory->define(Company::class, function (Faker $faker) {
     return [
         'name' => $name,
 		'slug' => $slug,
-		'credits_remaining' => 100
+		'credits_remaining' => 100,
     ];
 });

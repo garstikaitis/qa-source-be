@@ -12,6 +12,10 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const ADMIN = 'admin';
+    const CLIENT = 'client';
+    const TESTER = 'tester';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -39,6 +43,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['role'];
+
+    public function getRoleAttribute() {
+        return $this->determineRole();
+    }
+
+    private function determineRole() {
+        if($this->isTester()) { return self::TESTER; }
+        if($this->isClient()) { return self::CLIENT; }
+        if($this->isAdmin()) { return self::ADMIN; }
+    }
+
     public function generateToken()
     {
         $this->api_token = Str::random(60);
@@ -49,5 +65,17 @@ class User extends Authenticatable
 
     public function companies() {
         return $this->belongsToMany(Company::class, 'company_user', 'userId', 'companyId');
+    }
+
+    public function isTester() {
+        return $this->companies()->count() === 0 && !$this->is_admin;
+    }
+
+    public function isClient() {
+        return $this->companies()->count() > 0 && !$this->is_admin;
+    }
+
+    public function isAdmin() {
+        return $this->is_admin;
     }
 }
