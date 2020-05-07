@@ -2,16 +2,18 @@
 
 namespace App\Http\UseCases\Project;
 
-use App\Model\Task;
-use App\Models\User;
+use App\Models\File;
 use App\Models\Project;
+use Illuminate\Support\Str;
 use App\Helpers\FormHelpers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ReturnProject {
 
 	private $project;
+	private $file;
 
 	public function __construct(array $request) {
 		$this->request = $request;
@@ -24,6 +26,10 @@ class ReturnProject {
 		$this->setDefaultValues();
 
 		$this->validateUser();
+
+		$this->uploadFile();
+
+		$this->persistFileEntry();
 
 		$this->returnProject();
 
@@ -40,7 +46,8 @@ class ReturnProject {
 	private function validate() {
 		$validator = Validator::make($this->request, [
 			'projectId' => 'required|integer|exists:projects,id',
-			'userId' => 'required|integer|exists:users,id'
+			'userId' => 'required|integer|exists:users,id',
+			'file' => 'required|file',
 		], FormHelpers::validationMessages());
 
 		if ($validator->fails()) {
@@ -52,7 +59,20 @@ class ReturnProject {
 		$this->project = Project::findOrFail($this->request['projectId']);
 	}
 
+	private function uploadFile() {
+		Storage::putFileAs('submissions/' . $this->project->id, $this->request['file'], $this->request['file']->getClientOriginalName());
+	}
+
+	private function persistFileEntry() {
+		$file = $this->request['file'];
+		$this->file = File::create([
+			'original_filename' => $file->getClientOriginalName(),
+			'filename' => $file->hashName(),
+			'mime' => $file->getMimeType(),
+		]);
+	}
+
 	private function returnProject() {
-		$this->project->update(['status' => Project::FINISHED]);
+		$this->project->update(['status' => Project::FINISHED, 'submission_file_id' => $this->file->id]);
 	}
 }

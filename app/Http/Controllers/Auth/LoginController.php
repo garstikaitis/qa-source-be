@@ -57,20 +57,16 @@ class LoginController extends Controller
         return $validator;
     }
 
-    // public function attemptLogin(Request $request) {
-    //     return Auth::attempt($request->only(['email', 'password']));
-    // }
-
     public function login(Request $request) {
         $this->validateLogin($request);
 
         if ($this->attemptLogin($request)) {
             $user = $this->guard()->user();
             $user->generateToken();
-
+            // dd($user->load('companies'));
             return response()->json([
                 'success' => true,
-                'data' => $user,
+                'data' => $user->load('companies'),
             ]);
         }
 

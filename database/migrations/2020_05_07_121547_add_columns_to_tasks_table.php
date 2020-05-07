@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeTasksAndProjectsTable extends Migration
+class AddColumnsToTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class ChangeTasksAndProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::table('tasks', function(Blueprint $table) {
-            $table->unsignedBigInteger('projectId');
-            $table->foreign('projectId')->references('id')->on('projects');
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->enum('type', ['Alpha', 'Acceptance', 'Ad-hoc', 'Accessibility', 'Beta', 'Browser compatibility', 'Backward compatibility', 'Boundary value', 'Usability']);
         });
     }
 
@@ -26,6 +25,8 @@ class ChangeTasksAndProjectsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('tasks', function (Blueprint $table) {
+            //
+        });
     }
 }

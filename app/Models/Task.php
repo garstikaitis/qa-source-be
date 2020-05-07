@@ -15,6 +15,8 @@ class Task extends Model
     }
 
     public function project() {
-        return $this->hasOne(Project::class, 'projectId', 'id');
+        return $this->hasOne(Project::class, 'taskId');
+
+        // $related, $through, $firstKey = null, $secondKey = null, $localKey = null, $secondLocalKey = null
     }
 }

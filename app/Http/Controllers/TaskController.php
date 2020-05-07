@@ -21,14 +21,16 @@ class TaskController extends Controller
         try {
             $data = null;
             if(Auth::user()->isTester()) {
-                $data = Task::whereDoesntHave('projects')
+                $data = Task::with(['project', 'company'])->whereDoesntHave('project')->get();
+                return response(['success' => true, 'message' => 'Successfuly got data', 'data' => $data], 200);
             }
             if(Auth::user()->isClient()) {
                 $data = Task::where('companyId', Auth::user()->companies()->first()->id)->with('company')->get();
+                return response(['success' => true, 'message' => 'Successfuly got data', 'data' => $data], 200);
             } else {
                 $data = Task::with('company')->get();
+                return response(['success' => true, 'message' => 'Successfuly got data', 'data' => $data], 200);
             }
-            return response(['success' => true, 'message' => 'Successfuly got data', 'data' => $data], 200);
         } catch (\Throwable $e) {
             return response(['success' => false, 'message' => $e->getMessage()], 500);
         }

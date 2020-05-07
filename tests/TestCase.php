@@ -7,17 +7,16 @@ use App\Models\Company;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, RefreshDatabase;
+    use CreatesApplication, DatabaseTransactions;
 
     public function setUp() :void
     {
         parent::setUp();
-
-        // Artisan::call('db:seed');
 
         $this->setDefaultUsers();
 

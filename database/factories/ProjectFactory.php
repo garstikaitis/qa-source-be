@@ -10,7 +10,8 @@ use Faker\Generator as Faker;
 $factory->define(Project::class, function (Faker $faker) {
     return [
         'status' => Project::STARTED,
-		'taskId' => factory(Task::class)->create(),
-		'userId' => factory(User::class)->create()
+		'taskId' => factory(Task::class)->create()->id,
+        'userId' => factory(User::class)->create()->id,
+        'submission_file_id' => null,
     ];
 });

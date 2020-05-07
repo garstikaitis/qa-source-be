@@ -13,7 +13,7 @@ class Project extends Model
     const STARTED = 'started';
     const FINISHED = 'finished';
 
-    protected $fillable = ['taskId', 'userId', 'status'];
+    protected $fillable = ['taskId', 'userId', 'status', 'submission_file_id'];
 
     public function tester() {
         return $this->hasOne(User::class, 'id', 'userId');

@@ -30,8 +30,6 @@ class CreateTask {
 
 		$this->deductCredits();
 
-		$this->createProject();
-
 		$this->createTask();
 
 		return response(['success' => true, 'message' => 'Successfuly created task', 'data' => $this->task], 201);
@@ -62,6 +60,7 @@ class CreateTask {
 			'description' => 'required|string',
 			'companyId' => 'required|integer|exists:companies,id',
 			'deadline' => 'date_format:Y-m-d H:i:s',
+			'type' => 'required|string',
 		], FormHelpers::validationMessages());
 
 		if ($validator->fails()) {
@@ -69,13 +68,8 @@ class CreateTask {
 		}
 	}
 
-	private function createProject() {
-		$this->project = Project::create(['status' => Project::REQUESTED]);
-	}
-
 	private function createTask() {
 		$this->request['deadline'] = (new Carbon($this->request['deadline']))->endOfHour()->toDateTimeString();
-		$this->request['projectId'] = $this->project->id;
 		$this->task = Task::create($this->request);
 	}
 }

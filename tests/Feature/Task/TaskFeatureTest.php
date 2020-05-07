@@ -66,6 +66,7 @@ class TaskFeatureTest extends TestCase
             'name' => 'Task 1',
             'description' => 'random',
             'companyId' => $this->company->id,
+            'type' => 'Usability',
             'deadline' => Carbon::now()->addDays(1)->toDateTimeString(),
         ];
 		}

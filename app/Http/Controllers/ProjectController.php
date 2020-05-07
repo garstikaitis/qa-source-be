@@ -31,6 +31,7 @@ class ProjectController extends Controller
         try {
             return (new ReturnProject(request()->all()))->handle();
         } catch (\Throwable $e) {
+            echo $e->getMessage();
             return response(['success' => false, 'message' => $e->getMessage()], 500);
         }
 	}

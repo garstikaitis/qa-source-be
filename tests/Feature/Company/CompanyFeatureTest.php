@@ -73,7 +73,7 @@ class CompanyFeatureTest extends TestCase
 		$response = $this->json('get', '/api/companies', [], $this->adminHeaders)
 		  ->assertStatus(200);
 		$count = count($response->original['data']);
-		$this->assertTrue($count === 6);
+		$this->assertTrue($count === 7);
 	}
 
 	public function test_admin_can_add_user_to_company() {
