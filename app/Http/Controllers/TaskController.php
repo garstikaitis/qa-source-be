@@ -35,4 +35,13 @@ class TaskController extends Controller
             return response(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
+    public function getTask() {
+        try {
+            $task = Task::with('company')->where('id', request()->get('taskId'))->firstOrFail();
+            return response(['success' => true, 'message' => 'Succesfuly loaded task', 'data' => $task]);
+        } catch (\Throwable $e) {
+            return response(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 }

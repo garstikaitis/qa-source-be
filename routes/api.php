@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth:api'], function() {
     Route::group(['prefix' => 'tasks'], function () {
         Route::get('/', 'TaskController@getTasks')->name('getTasks');
+        Route::post('/', 'TaskController@getTask')->name('getTask');
         Route::post('/create', 'TaskController@createTask')->name('createTask');
     });
     Route::group(['prefix' => 'users'], function () {
