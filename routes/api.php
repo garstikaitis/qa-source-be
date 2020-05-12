@@ -14,14 +14,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//TODO 
+// Secure files route
+Route::group(['prefix' => 'files'], function() {
+    Route::get('/{type}/{fileId}', 'FileController@downloadFile')->name('downloadFile');
+});
 Route::group(['middleware' => 'auth:api'], function() {
     Route::group(['prefix' => 'tasks'], function () {
         Route::get('/', 'TaskController@getTasks')->name('getTasks');
         Route::post('/', 'TaskController@getTask')->name('getTask');
         Route::post('/create', 'TaskController@createTask')->name('createTask');
+        Route::post('/rate', 'TaskController@rateTask')->name('rateTask');
     });
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', 'UserController@getUsers')->name('getUsers');
+        Route::get('/me', 'UserController@getUserData')->name('getUserData');
     });
     Route::group(['prefix' => 'companies'], function () {
         Route::get('/', 'CompanyController@getCompanies')->name('getCompanies');

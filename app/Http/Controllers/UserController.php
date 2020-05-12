@@ -22,4 +22,15 @@ class UserController extends Controller
             return response(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
+    public function getUserData() {
+        try {
+            $data = null;
+                $data = Auth::user();
+                $data['ratings'] = Auth::user()->ratings();   
+            return response(['success' => true, 'message' => 'Successfuly got users', 'data' => $data], 200);
+        } catch (\Throwable $e) {
+            return response(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 }

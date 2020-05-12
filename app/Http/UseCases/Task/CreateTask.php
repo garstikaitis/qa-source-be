@@ -3,10 +3,11 @@
 namespace App\Http\UseCases\Task;
 
 use Carbon\Carbon;
-use App\Model\Task;
+use App\Models\Task;
+use App\Models\File;
 use App\Models\Company;
 use App\Helpers\FormHelpers;
-use App\Models\Project;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class CreateTask {
@@ -14,7 +15,7 @@ class CreateTask {
 	private $task;
 	private $company;
 	private $price;
-	private $project;
+	private $file;
 
 	public function __construct(array $request) {
 		$this->request = $request;
@@ -32,6 +33,17 @@ class CreateTask {
 
 		$this->createTask();
 
+		if(!is_null($this->request['file'])) {
+			
+			$this->uploadFile();
+	
+			$this->persistFileEntry();
+	
+			$this->task->update(['file_id' => $this->file->id]);
+
+		}
+
+
 		return response(['success' => true, 'message' => 'Successfuly created task', 'data' => $this->task], 201);
 
 	}
@@ -40,6 +52,19 @@ class CreateTask {
 		$deadline = (new Carbon($this->request['deadline']));
 		$deadlineInHours = Carbon::now("Europe/Copenhagen")->diffInHours($deadline->endOfHour());
 		$this->price = (int)ceil($deadlineInHours / 3);
+	}
+
+	private function uploadFile() {
+		Storage::putFileAs('taskFiles/' . $this->task->id, $this->request['file'], $this->request['file']->getClientOriginalName());
+	}
+
+	private function persistFileEntry() {
+		$file = $this->request['file'];
+		$this->file = File::create([
+			'original_filename' => $file->getClientOriginalName(),
+			'filename' => $file->hashName(),
+			'mime' => $file->getMimeType(),
+		]);
 	}
 
 	private function validateCredits() {
@@ -61,6 +86,7 @@ class CreateTask {
 			'companyId' => 'required|integer|exists:companies,id',
 			'deadline' => 'date_format:Y-m-d H:i:s',
 			'type' => 'required|string',
+			'file' => 'nullable|file',
 		], FormHelpers::validationMessages());
 
 		if ($validator->fails()) {

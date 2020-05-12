@@ -2,7 +2,7 @@
 
 namespace App\Http\UseCases\Project;
 
-use App\Model\Task;
+use App\Models\Task;
 use App\Models\User;
 use App\Models\Project;
 use App\Helpers\FormHelpers;

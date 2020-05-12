@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Company;
+use App\Models\TaskRating;
 use Illuminate\Support\Str;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -47,6 +48,10 @@ class User extends Authenticatable
 
     public function getRoleAttribute() {
         return $this->determineRole();
+    }
+
+    public function ratings() {
+        return TaskRating::where('given_to', $this->id)->get();
     }
 
     private function determineRole() {

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Model\Task;
+use App\Models\Task;
 use Tests\TestCase;
 use App\Models\Project;
 use Illuminate\Http\UploadedFile;

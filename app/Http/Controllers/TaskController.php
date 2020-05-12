@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Task;
+use App\Models\Task;
+use App\Http\UseCases\Task\RateTask;
 use Illuminate\Support\Facades\Auth;
 use App\Http\UseCases\Task\CreateTask;
 
@@ -11,6 +12,15 @@ class TaskController extends Controller
     public function createTask() {
         try {
             return (new CreateTask(request()->all()))->handle();
+        } catch (\Throwable $e) {
+            echo $e->getMessage();
+            return response(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function rateTask() {
+        try {
+            return (new RateTask(request()->all()))->handle();
         } catch (\Throwable $e) {
             echo $e->getMessage();
             return response(['success' => false, 'message' => $e->getMessage()], 500);
@@ -38,7 +48,7 @@ class TaskController extends Controller
 
     public function getTask() {
         try {
-            $task = Task::with('company')->where('id', request()->get('taskId'))->firstOrFail();
+            $task = Task::with('company', 'file')->where('id', request()->get('taskId'))->firstOrFail();
             return response(['success' => true, 'message' => 'Succesfuly loaded task', 'data' => $task]);
         } catch (\Throwable $e) {
             return response(['success' => false, 'message' => $e->getMessage()], 500);
