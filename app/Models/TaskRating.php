@@ -13,11 +13,11 @@ class TaskRating extends Model
 	protected $table = 'task_user_ratings';
 
     public function createdBy() {
-        return $this->hasOne(User::class, 'created_by', 'id');
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
     public function givenTo() {
-        return $this->hasOne(User::class, 'given_to', 'id');
+        return $this->belongsTo(User::class, 'given_to', 'id');
     }
 
     public function task() {

@@ -51,7 +51,7 @@ class User extends Authenticatable
     }
 
     public function ratings() {
-        return TaskRating::where('given_to', $this->id)->get();
+        return TaskRating::with(['createdBy.companies', 'givenTo', 'task'])->where('given_to', $this->id)->latest()->get();
     }
 
     private function determineRole() {
