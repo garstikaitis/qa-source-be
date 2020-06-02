@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
-use Illuminate\Support\Facades\Auth;
+use App\Http\UseCases\Project\GetProject;
 use App\Http\UseCases\Project\GetProjects;
 use App\Http\UseCases\Project\ReturnProject;
 use App\Http\UseCases\Project\ApplyToProject;
@@ -21,6 +20,14 @@ class ProjectController extends Controller
     public function getProjects() {
 		try {
             return (new GetProjects(request()->all()))->handle();
+		} catch(\Throwable $e) {
+			return response([ 'success' => false, 'message' => $e->getMessage() ], 500);
+		}
+    }
+    
+    public function getProject() {
+		try {
+            return (new GetProject(request()->all()))->handle();
 		} catch(\Throwable $e) {
 			return response([ 'success' => false, 'message' => $e->getMessage() ], 500);
 		}

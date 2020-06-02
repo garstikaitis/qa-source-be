@@ -20,6 +20,10 @@ Route::group(['prefix' => 'files'], function() {
     Route::get('/{type}/{fileId}', 'FileController@downloadFile')->name('downloadFile');
 });
 Route::group(['middleware' => 'auth:api'], function() {
+    Route::group(['prefix' => 'chat'], function() {
+        Route::post('/', 'ChatController@chat')->name('chat');
+        Route::post('/token', 'ChatController@generateChatToken')->name('generateChatToken');
+    });
     Route::group(['prefix' => 'tasks'], function () {
         Route::get('/', 'TaskController@getTasks')->name('getTasks');
         Route::post('/', 'TaskController@getTask')->name('getTask');
@@ -38,6 +42,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     });
     Route::group(['prefix' => 'projects'], function() {
         Route::get('/', 'ProjectController@getProjects')->name('getProjects');
+        Route::post('/', 'ProjectController@getProject')->name('getProject');
         Route::post('/take', 'ProjectController@applyToProject')->name('applyToProject');
         Route::post('/return', 'ProjectController@returnProject')->name('returnProject');
     });
