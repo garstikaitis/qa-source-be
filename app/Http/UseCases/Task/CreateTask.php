@@ -87,6 +87,7 @@ class CreateTask {
 			'deadline' => 'date_format:Y-m-d H:i:s',
 			'type' => 'required|string',
 			'file' => 'nullable|file',
+			'clientId' => 'required|integer|exists:users,id'
 		], FormHelpers::validationMessages());
 
 		if ($validator->fails()) {
@@ -96,6 +97,7 @@ class CreateTask {
 
 	private function createTask() {
 		$this->request['deadline'] = (new Carbon($this->request['deadline']))->endOfHour()->toDateTimeString();
+		$this->request['client_id'] = $this->request['clientId'];
 		$this->task = Task::create($this->request);
 	}
 }

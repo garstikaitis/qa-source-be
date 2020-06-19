@@ -11,8 +11,8 @@ use App\Http\UseCases\Company\AddUserToCompany;
 class CompanyController extends Controller
 {
     public function createCompany() {
-        try {
-            return (new CreateCompany(request()->all()))->handle();
+		try {
+			return (new CreateCompany(request()->all()))->handle();
         } catch (\Throwable $e) {
             return response(['success' => false, 'message' => $e->getMessage()], 500);
         }

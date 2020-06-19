@@ -22,4 +22,8 @@ class Task extends Model
     public function file() {
         return $this->belongsTo(File::class);
     }
+    
+    public function client() {
+        return $this->belongsTo(User::class, 'client_id');
+    }
 }

@@ -31,7 +31,7 @@ class TaskController extends Controller
         try {
             $data = null;
             if(Auth::user()->isTester()) {
-                $data = Task::with(['project', 'company'])->whereDoesntHave('project')->get();
+                $data = Task::with(['project', 'company', 'client'])->whereDoesntHave('project')->get();
                 return response(['success' => true, 'message' => 'Successfuly got data', 'data' => $data], 200);
             }
             if(Auth::user()->isClient()) {
